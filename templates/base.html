@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NeonGuard Security Dashboard{% endblock %}</title>
+    
+    <!-- Cyber Theme Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Core Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cyber-theme.css') }}">
+    
+    <!-- Additional Styles -->
+    {% block styles %}{% endblock %}
+</head>
+<body class="cyber-body">
+    <!-- Matrix Background Effect -->
+    <div class="matrix-bg" id="matrix-canvas"></div>
+    
+    <!-- Main Container -->
+    <div class="cyber-container">
+        <!-- Navigation Header -->
+        <header class="cyber-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="cyber-logo">
+                        <span class="logo-bracket">[</span>
+                        <span class="logo-text">NEONGUARD</span>
+                        <span class="logo-bracket">]</span>
+                    </h1>
+                    <div class="status-indicator">
+                        <span class="status-dot pulse"></span>
+                        <span class="status-text">SYSTEM ACTIVE</span>
+                    </div>
+                </div>
+                
+                <nav class="cyber-nav">
+                    <a href="/" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+                        <span class="nav-icon">◈</span>
+                        <span class="nav-text">COMMAND</span>
+                    </a>
+                    <a href="/security" class="nav-link {% if request.endpoint == 'security_monitor' %}active{% endif %}">
+                        <span class="nav-icon">⬢</span>
+                        <span class="nav-text">SECURITY</span>
+                    </a>
+                    <a href="/admin" class="nav-link {% if request.endpoint == 'admin_panel' %}active{% endif %}">
+                        <span class="nav-icon">⬣</span>
+                        <span class="nav-text">ADMIN</span>
+                    </a>
+                </nav>
+                
+                <div class="system-info">
+                    <div class="uptime-display">
+                        <span class="uptime-label">UPTIME</span>
+                        <span class="uptime-value" id="system-uptime">99.9%</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content Area -->
+        <main class="cyber-main">
+            <!-- Alert Banner -->
+            <div class="alert-banner" id="alert-banner" style="display: none;">
+                <div class="alert-content">
+                    <span class="alert-icon">⚠</span>
+                    <span class="alert-message" id="alert-message"></span>
+                    <button class="alert-close" onclick="closeAlert()">×</button>
+                </div>
+            </div>
+            
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="cyber-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <span class="footer-label">THREAT LEVEL:</span>
+                    <span class="threat-level" id="threat-level">MINIMAL</span>
+                </div>
+                <div class="footer-section">
+                    <span class="footer-label">LAST SCAN:</span>
+                    <span class="last-scan" id="last-scan">--:--:--</span>
+                </div>
+                <div class="footer-section">
+                    <span class="footer-label">STATUS:</span>
+                    <span class="system-status online">ONLINE</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Core JavaScript -->
+    <script src="{{ url_for('static', filename='js/realtime-dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/scan-manager.js') }}"></script>
+    
+    <!-- Page-specific Scripts -->
+    {% block scripts %}{% endblock %}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize matrix background
+            initMatrixBackground();
+            
+            // Start real-time updates
+            startRealTimeUpdates();
+        });
+        
+        // Global alert function
+        function showAlert(message, type = 'info') {
+            const banner = document.getElementById('alert-banner');
+            const messageEl = document.getElementById('alert-message');
+            
+            banner.className = `alert-banner ${type}`;
+            messageEl.textContent = message;
+            banner.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                banner.style.display = 'none';
+            }, 5000);
+        }
+        
+        function closeAlert() {
+            document.getElementById('alert-banner').style.display = 'none';
+        }
+        
+        // Matrix background effect
+        function initMatrixBackground() {
+            const canvas = document.getElementById('matrix-canvas');
+            if (!canvas) return;
+            
+            // Simple matrix rain effect
+            setInterval(() => {
+                const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                const x = Math.random() * window.innerWidth;
+                
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.className = 'matrix-char';
+                span.style.left = x + 'px';
+                span.style.top = '-20px';
+                span.style.position = 'fixed';
+                span.style.color = '#00ff41';
+                span.style.fontSize = '12px';
+                span.style.fontFamily = 'Fira Code, monospace';
+                span.style.opacity = '0.7';
+                span.style.zIndex = '1';
+                span.style.pointerEvents = 'none';
+                
+                document.body.appendChild(span);
+                
+                // Animate character falling
+                let top = -20;
+                const fall = setInterval(() => {
+                    top += 5;
+                    span.style.top = top + 'px';
+                    
+                    if (top > window.innerHeight) {
+                        clearInterval(fall);
+                        if (span.parentNode) {
+                            span.parentNode.removeChild(span);
+                        }
+                    }
+                }, 50);
+            }, 200);
+        }
+        
+        // Real-time updates starter
+        function startRealTimeUpdates() {
+            // Update system time
+            setInterval(() => {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+                document.querySelectorAll('.current-time').forEach(el => {
+                    el.textContent = timeStr;
+                });
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

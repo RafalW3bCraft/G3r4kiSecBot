@@ -1,0 +1,641 @@
+{% extends "base.html" %}
+
+{% block title %}NeonGuard Command Center{% endblock %}
+
+{% block styles %}
+<style>
+/* Dashboard-specific styles */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--cyber-spacing-xl);
+    margin-bottom: var(--cyber-spacing-xl);
+}
+
+.cyber-card {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    padding: var(--cyber-spacing-lg);
+    position: relative;
+    overflow: hidden;
+    transition: var(--cyber-transition);
+}
+
+.cyber-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
+    opacity: 0.8;
+}
+
+.cyber-card:hover {
+    border-color: var(--cyber-primary);
+    box-shadow: var(--cyber-glow-primary);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--cyber-spacing-lg);
+    padding-bottom: var(--cyber-spacing-sm);
+    border-bottom: 1px solid var(--cyber-border);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--cyber-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: var(--cyber-spacing-sm);
+}
+
+.card-icon {
+    font-size: 1.4rem;
+    color: var(--cyber-secondary);
+}
+
+.card-status {
+    font-size: 0.8rem;
+    color: var(--cyber-text-muted);
+    text-transform: uppercase;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--cyber-spacing-md);
+}
+
+.stat-item {
+    text-align: center;
+    padding: var(--cyber-spacing-md);
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 6px;
+    transition: var(--cyber-transition);
+}
+
+.stat-item:hover {
+    background: rgba(0, 255, 255, 0.1);
+    border-color: var(--cyber-primary);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--cyber-primary);
+    text-shadow: var(--cyber-glow-primary);
+    font-family: var(--cyber-font-secondary);
+    margin-bottom: var(--cyber-spacing-xs);
+    transition: var(--cyber-transition);
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--cyber-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.progress-bar {
+    background: var(--cyber-bg-darker);
+    border-radius: 4px;
+    height: 8px;
+    margin: var(--cyber-spacing-sm) 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
+    border-radius: 4px;
+    transition: width 0.8s ease;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progress-shine 2s ease-in-out infinite;
+}
+
+@keyframes progress-shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.security-feed {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: var(--cyber-spacing-md);
+}
+
+.security-feed-item {
+    display: flex;
+    align-items: center;
+    gap: var(--cyber-spacing-md);
+    padding: var(--cyber-spacing-sm) var(--cyber-spacing-md);
+    margin-bottom: var(--cyber-spacing-sm);
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 6px;
+    transition: var(--cyber-transition);
+}
+
+.security-feed-item:hover {
+    background: rgba(0, 255, 255, 0.1);
+    border-color: var(--cyber-primary);
+}
+
+.feed-icon {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+.feed-content {
+    flex: 1;
+}
+
+.feed-title {
+    font-weight: 600;
+    color: var(--cyber-text-primary);
+    margin-bottom: 2px;
+}
+
+.feed-details {
+    font-size: 0.85rem;
+    color: var(--cyber-text-secondary);
+    margin-bottom: 2px;
+}
+
+.feed-time {
+    font-size: 0.8rem;
+    color: var(--cyber-text-muted);
+}
+
+.feed-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+}
+
+.severity-high {
+    color: var(--cyber-danger);
+}
+
+.severity-high .feed-status {
+    background: rgba(255, 48, 48, 0.2);
+    border: 1px solid var(--cyber-danger);
+    color: var(--cyber-danger);
+}
+
+.severity-medium {
+    color: var(--cyber-warning);
+}
+
+.severity-medium .feed-status {
+    background: rgba(255, 255, 0, 0.2);
+    border: 1px solid var(--cyber-warning);
+    color: var(--cyber-warning);
+}
+
+.severity-low {
+    color: var(--cyber-secondary);
+}
+
+.severity-low .feed-status {
+    background: rgba(0, 255, 65, 0.2);
+    border: 1px solid var(--cyber-secondary);
+    color: var(--cyber-secondary);
+}
+
+.url-scanner {
+    display: flex;
+    gap: var(--cyber-spacing-md);
+    margin-top: var(--cyber-spacing-md);
+}
+
+.url-input {
+    flex: 1;
+    background: var(--cyber-bg-darker);
+    border: 1px solid var(--cyber-border);
+    border-radius: 6px;
+    padding: var(--cyber-spacing-md);
+    color: var(--cyber-text-primary);
+    font-family: var(--cyber-font-primary);
+    font-size: 0.9rem;
+    transition: var(--cyber-transition);
+}
+
+.url-input:focus {
+    outline: none;
+    border-color: var(--cyber-primary);
+    box-shadow: var(--cyber-glow-primary);
+}
+
+.url-input::placeholder {
+    color: var(--cyber-text-muted);
+}
+
+.cyber-btn {
+    background: transparent;
+    border: 2px solid var(--cyber-primary);
+    color: var(--cyber-primary);
+    padding: var(--cyber-spacing-md) var(--cyber-spacing-lg);
+    border-radius: 6px;
+    font-family: var(--cyber-font-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--cyber-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.cyber-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--cyber-primary);
+    transition: var(--cyber-transition);
+    z-index: -1;
+}
+
+.cyber-btn:hover::before {
+    left: 0;
+}
+
+.cyber-btn:hover {
+    color: var(--cyber-bg-dark);
+    box-shadow: var(--cyber-glow-primary);
+}
+
+.cyber-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cyber-btn.scanning {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.scan-result {
+    margin-top: var(--cyber-spacing-md);
+    display: none;
+}
+
+.scan-result-card {
+    background: var(--cyber-bg-surface);
+    border: 1px solid var(--cyber-border);
+    border-radius: 6px;
+    padding: var(--cyber-spacing-md);
+}
+
+.scan-result-card.success {
+    border-color: var(--cyber-secondary);
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.scan-result-card.warning {
+    border-color: var(--cyber-warning);
+    background: rgba(255, 255, 0, 0.1);
+}
+
+.scan-result-card.danger {
+    border-color: var(--cyber-danger);
+    background: rgba(255, 48, 48, 0.1);
+}
+
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: var(--cyber-spacing-md);
+    margin-bottom: var(--cyber-spacing-md);
+    font-weight: 600;
+}
+
+.result-icon {
+    font-size: 1.4rem;
+}
+
+.result-confidence {
+    margin-left: auto;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.result-details p {
+    margin-bottom: var(--cyber-spacing-xs);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .url-scanner {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <span class="title-bracket">[</span>
+            <span class="title-text">COMMAND CENTER</span>
+            <span class="title-bracket">]</span>
+        </h1>
+        <div class="page-subtitle">Real-time security monitoring and threat intelligence</div>
+    </div>
+    
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid">
+        <!-- System Overview Card -->
+        <div class="cyber-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span class="card-icon">◈</span>
+                    System Overview
+                </div>
+                <div class="card-status">Live Data</div>
+            </div>
+            
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-groups">0</div>
+                    <div class="stat-label">Total Groups</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-scans">0</div>
+                    <div class="stat-label">Total Scans</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="threats-blocked">0</div>
+                    <div class="stat-label">Threats Blocked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="active-users">0</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: var(--cyber-spacing-lg);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: var(--cyber-spacing-xs);">
+                    <span>Threat Detection Rate</span>
+                    <span id="threat-detection-rate">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%" id="threat-detection-progress"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Today's Activity Card -->
+        <div class="cyber-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span class="card-icon">⚡</span>
+                    Today's Activity
+                </div>
+                <div class="card-status">Real-time</div>
+            </div>
+            
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="scans-today">0</div>
+                    <div class="stat-label">Scans Today</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="threats-today">0</div>
+                    <div class="stat-label">Threats Today</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="new-users-today">0</div>
+                    <div class="stat-label">New Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="system-health">OPTIMAL</div>
+                    <div class="stat-label">System Health</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- URL Scanner Card -->
+        <div class="cyber-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span class="card-icon">🔍</span>
+                    URL Scanner
+                </div>
+                <div class="card-status">Interactive</div>
+            </div>
+            
+            <form id="url-scan-form" class="url-scanner">
+                <input 
+                    type="url" 
+                    id="url-input" 
+                    class="url-input" 
+                    placeholder="Enter URL to scan (e.g., https://example.com)"
+                    required
+                >
+                <button type="submit" id="scan-button" class="cyber-btn">
+                    Scan URL
+                </button>
+            </form>
+            
+            <div id="scan-result" class="scan-result">
+                <!-- Scan results will be displayed here -->
+            </div>
+        </div>
+        
+        <!-- Security Feed Card -->
+        <div class="cyber-card" style="grid-column: span 2;">
+            <div class="card-header">
+                <div class="card-title">
+                    <span class="card-icon">🛡️</span>
+                    Live Security Feed
+                </div>
+                <div class="card-status">
+                    <span class="status-dot pulse"></span>
+                    Updating
+                </div>
+            </div>
+            
+            <div id="security-feed" class="security-feed">
+                <!-- Security feed items will be populated by JavaScript -->
+                <div class="security-feed-item">
+                    <div class="feed-icon">⏳</div>
+                    <div class="feed-content">
+                        <div class="feed-title">Loading security data...</div>
+                        <div class="feed-details">Initializing real-time monitoring</div>
+                        <div class="feed-time">Just now</div>
+                    </div>
+                    <div class="feed-status">LOADING</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Stats Bar -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="card-icon">📊</span>
+                Quick Statistics
+            </div>
+            <div class="card-status">Live</div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--cyber-spacing-lg);">
+            <div style="text-align: center;">
+                <div style="font-size: 0.9rem; color: var(--cyber-text-muted); margin-bottom: var(--cyber-spacing-xs);">
+                    MALICIOUS DETECTED
+                </div>
+                <div style="font-size: 1.8rem; font-weight: 700; color: var(--cyber-danger);" id="malicious-count">0</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 0.9rem; color: var(--cyber-text-muted); margin-bottom: var(--cyber-spacing-xs);">
+                    SUSPICIOUS FLAGGED
+                </div>
+                <div style="font-size: 1.8rem; font-weight: 700; color: var(--cyber-warning);" id="suspicious-count">0</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 0.9rem; color: var(--cyber-text-muted); margin-bottom: var(--cyber-spacing-xs);">
+                    CLEAN VERIFIED
+                </div>
+                <div style="font-size: 1.8rem; font-weight: 700; color: var(--cyber-secondary);" id="clean-count">0</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 0.9rem; color: var(--cyber-text-muted); margin-bottom: var(--cyber-spacing-xs);">
+                    CURRENT TIME
+                </div>
+                <div style="font-size: 1.8rem; font-weight: 700; color: var(--cyber-primary); font-family: var(--cyber-font-secondary);" class="current-time">--:--:--</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: var(--cyber-spacing-xl);
+    padding: var(--cyber-spacing-xl) 0;
+    border-bottom: 1px solid var(--cyber-border);
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--cyber-primary);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: var(--cyber-glow-primary);
+    margin-bottom: var(--cyber-spacing-sm);
+}
+
+.title-bracket {
+    color: var(--cyber-secondary);
+    text-shadow: var(--cyber-glow-secondary);
+}
+
+.title-text {
+    background: linear-gradient(45deg, var(--cyber-primary), var(--cyber-secondary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: var(--cyber-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+    
+    .cyber-card[style*="grid-column: span 2"] {
+        grid-column: span 1;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Real-time Dashboard
+    if (typeof CyberDashboard !== 'undefined') {
+        window.cyberDashboard = new CyberDashboard();
+        console.log('[CYBER-DASHBOARD] Initialized with real-time updates');
+    }
+    
+    // Initialize URL Scanner
+    if (typeof URLScanner !== 'undefined') {
+        window.urlScanner = new URLScanner();
+    }
+    
+    // Update progress bar when threat detection rate changes
+    const updateProgressBar = () => {
+        const rateElement = document.getElementById('threat-detection-rate');
+        const progressElement = document.getElementById('threat-detection-progress');
+        
+        if (rateElement && progressElement) {
+            const rate = parseFloat(rateElement.textContent) || 0;
+            progressElement.style.width = rate + '%';
+        }
+    };
+    
+    // Monitor for changes in threat detection rate
+    const observer = new MutationObserver(updateProgressBar);
+    const rateElement = document.getElementById('threat-detection-rate');
+    if (rateElement) {
+        observer.observe(rateElement, { childList: true, subtree: true });
+    }
+    
+    console.log('[DASHBOARD] Command center initialized');
+});
+</script>
+{% endblock %}

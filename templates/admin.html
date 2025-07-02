@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}NeonGuard Admin Panel{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <span class="title-bracket">[</span>
+            <span class="title-text">ADMIN PANEL</span>
+            <span class="title-bracket">]</span>
+        </h1>
+        <div class="page-subtitle">System administration and control</div>
+    </div>
+    
+    <!-- Admin Content -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="card-icon">⚙️</span>
+                Administrative Controls
+            </div>
+        </div>
+        
+        <div style="text-align: center; padding: var(--cyber-spacing-xl);">
+            <p style="color: var(--cyber-text-secondary); margin-bottom: var(--cyber-spacing-lg);">
+                Admin panel interface coming soon...
+            </p>
+            <p style="color: var(--cyber-text-muted); font-size: 0.9rem;">
+                Access administrative functions through the API endpoints for now.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: var(--cyber-spacing-xl);
+    padding: var(--cyber-spacing-xl) 0;
+    border-bottom: 1px solid var(--cyber-border);
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--cyber-primary);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: var(--cyber-glow-primary);
+    margin-bottom: var(--cyber-spacing-sm);
+}
+
+.title-bracket {
+    color: var(--cyber-secondary);
+    text-shadow: var(--cyber-glow-secondary);
+}
+
+.title-text {
+    background: linear-gradient(45deg, var(--cyber-primary), var(--cyber-secondary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: var(--cyber-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.cyber-card {
+    background: var(--cyber-bg-card);
+    border: 1px solid var(--cyber-border);
+    border-radius: 8px;
+    padding: var(--cyber-spacing-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.cyber-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary));
+    opacity: 0.8;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--cyber-spacing-lg);
+    padding-bottom: var(--cyber-spacing-sm);
+    border-bottom: 1px solid var(--cyber-border);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--cyber-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: var(--cyber-spacing-sm);
+}
+
+.card-icon {
+    font-size: 1.4rem;
+    color: var(--cyber-secondary);
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+}
+</style>
+{% endblock %}
