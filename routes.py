@@ -673,7 +673,7 @@ def paypal_checkout(payment_id):
         success_url = f"{base_url}/webhook/paypal/{payment_id}/success"
         cancel_url = f"{base_url}/webhook/paypal/{payment_id}/cancel"
         
-        description = f"Security Bot Credits - {payment.quantity} scans"
+        description = f"G3r4kiSecBot Credits - {payment.quantity} scans"
         
         order_result = pp.create_paypal_payment(
             payment_id, 
@@ -1378,7 +1378,7 @@ def health():
     """Simple health check endpoint"""
     return jsonify({
         'status': 'ok',
-        'service': 'Advanced Security Bot',
+        'service': 'G3r4kiSecBot',
         'timestamp': datetime.now(timezone.utc).isoformat(),
         'version': '1.0.0'
     })

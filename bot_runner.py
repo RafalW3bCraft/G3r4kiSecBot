@@ -171,7 +171,7 @@ class G3r4kiSecBot:
         except Exception as e:
             logger.error(f"Database error: {e}")
         
-        start_msg = f"🛡️ Welcome to Advanced Security Bot!\n\n"
+        start_msg = f"🛡️ Welcome to G3r4kiSecBot!\n\n"
         start_msg += f"Hello {user.first_name or user.username}!\n\n"
         start_msg += "I'm your cybersecurity assistant. I can:\n\n"
         start_msg += "🔍 Scan URLs for threats\n"
@@ -193,7 +193,7 @@ class G3r4kiSecBot:
         print(f"🤖 BOT INTERACTION: /help command from user {user.id if user else 'unknown'}")
         logger.info(f"Bot /help command: User {user.id if user else 'unknown'}")
         
-        help_msg = "🛡️ Security Bot Commands\n\n"
+        help_msg = "🛡️ G3r4kiSecBot Commands\n\n"
         help_msg += "📋 **Basic Commands:**\n"
         help_msg += "/start - Start using the bot\n"
         help_msg += "/help - Show this help message\n"

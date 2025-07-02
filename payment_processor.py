@@ -485,7 +485,7 @@ class PaymentProcessor:
                 'application_context': {
                     'return_url': return_url,
                     'cancel_url': cancel_url,
-                    'brand_name': 'Security Bot',
+                    'brand_name': 'G3r4kiSecBot',
                     'user_action': 'PAY_NOW'
                 }
             }
