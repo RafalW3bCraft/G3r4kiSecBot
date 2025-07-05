@@ -4,8 +4,9 @@ services:
     env: python
     buildCommand: |
       apt-get update
-      apt-get install -y libjpeg-dev zlib1g-dev libpng-dev build-essential libpq-dev gcc
-      pip install .
+      apt-get install -y libjpeg-dev zlib1g-dev libpng-dev build-essential gcc
+      pip install poetry
+      poetry install
     startCommand: python main.py
     envVars:
       - key: PORT
@@ -15,7 +16,7 @@ services:
       - key: FLASK_DEBUG
         value: False
       - key: PYTHON_VERSION
-        value: 3.11
+        value: "3.11"
 
 databases:
   - name: secbot-postgres
