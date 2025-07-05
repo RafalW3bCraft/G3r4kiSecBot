@@ -2,23 +2,25 @@ services:
   - type: web
     name: g3rakisecbot
     env: python
+    pythonVersion: 3.11
     buildCommand: |
       apt-get update
       apt-get install -y libjpeg-dev zlib1g-dev libpng-dev build-essential gcc
       pip install poetry
       poetry install
-    startCommand: python main.py
+    startCommand: poetry run python main.py
     envVars:
       - key: PORT
         value: 5000
       - key: HOST
         value: 0.0.0.0
       - key: FLASK_DEBUG
-        value: False
-      - key: PYTHON_VERSION
-        value: "3.11"
+        value: "False"
+      # Add all your required secrets below (example):
+      # - key: TELEGRAM_BOT_TOKEN
+      #   sync: false
+      # - key: DATABASE_URL
+      #   fromDatabase:
+      #     name: secbot-postgres
+      #     property: connectionString
 
-databases:
-  - name: secbot-postgres
-    databaseName: secbot
-    user: secbot
