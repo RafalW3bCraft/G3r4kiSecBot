@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: g3rakisecbot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: HOST
+        value: 0.0.0.0
+      - key: FLASK_DEBUG
+        value: False
+
+databases:
+  - name: secbot-postgres
+    databaseName: secbot
+    user: secbot
