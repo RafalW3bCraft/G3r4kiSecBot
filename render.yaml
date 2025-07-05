@@ -4,7 +4,7 @@ services:
     env: python
     buildCommand: |
       apt-get update
-      apt-get install -y libjpeg-dev zlib1g-dev libpng-dev
+      apt-get install -y libjpeg-dev zlib1g-dev libpng-dev build-essential libpq-dev gcc
       pip install .
     startCommand: python main.py
     envVars:
@@ -14,6 +14,8 @@ services:
         value: 0.0.0.0
       - key: FLASK_DEBUG
         value: False
+      - key: PYTHON_VERSION
+        value: 3.11
 
 databases:
   - name: secbot-postgres
