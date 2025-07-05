@@ -7,7 +7,7 @@ dependencies = [
     "cryptography==42.0.2",
     "flask==3.0.0",
     "flask-sqlalchemy==3.1.1",
-    "pillow==10.2.0",
+    "pillow==9.5.0",
     "psycopg2-binary==2.9.9",
     "python-dotenv==1.0.0",
     "python-telegram-bot>=22.2",
