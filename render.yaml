@@ -2,7 +2,10 @@ services:
   - type: web
     name: g3rakisecbot
     env: python
-    buildCommand: pip install .
+    buildCommand: |
+      apt-get update
+      apt-get install -y libjpeg-dev zlib1g-dev libpng-dev
+      pip install .
     startCommand: python main.py
     envVars:
       - key: PORT
