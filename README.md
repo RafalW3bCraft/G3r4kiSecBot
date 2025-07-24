@@ -75,8 +75,6 @@ The web dashboard will be available at `http://localhost:5000`
 [![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=rafalw3bcraft/g3r4kisecbot@github)](https://gitads.dev/v1/ad-track?source=rafalw3bcraft/g3r4kisecbot@github)
 
 
-<!-- GitAds-Verify: G2ASUF3NDMUDCLPR91MX7CX62E8XXSGN -->
-
 ## Configuration
 
 ### Environment Variables
