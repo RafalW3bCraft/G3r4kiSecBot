@@ -1,7 +1,8 @@
 [project]
-name = "repl-nix-workspace"
+name = "g3rakisecbot"
+author = "RafalW3bCraft"
 version = "0.1.0"
-description = "Add your description here"
+description = "G3r4kiSecBot is an enterprise-grade security bot system that combines a powerful Telegram bot with a cyber-themed web dashboard. It provides real-time threat detection, URL scanning, and comprehensive security monitoring for both individual users and Telegram groups."
 requires-python = ">=3.11"
 dependencies = [
     "cryptography==42.0.2",
